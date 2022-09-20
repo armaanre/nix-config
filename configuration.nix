@@ -9,6 +9,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
+  
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -23,7 +25,8 @@
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Configure network proxy if necessary
+  # Configure network proxy             #export MONGOMS_SYSTEM_BINARY_VERSION_CHECK=false
+            #export MONGOMS_SYSTEM_BINARY=${pkgs-old.mongodb-5_0}/bin/mongodif necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
@@ -71,7 +74,6 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.armaan = {
     isNormalUser = true;
@@ -87,6 +89,8 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  services.gnome.gnome-keyring.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -96,6 +100,11 @@
     vscode-fhs
     slack
     git
+    direnv
+    docker-compose
+    awscli2
+    dbeaver
+    teams
   ];
 
   virtualisation.docker.enable = true;
