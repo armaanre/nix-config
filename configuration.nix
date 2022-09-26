@@ -12,6 +12,8 @@
   
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  services.udev.packages = with pkgs; [ vial ];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -20,6 +22,12 @@
   # Setup keyfile
   boot.initrd.secrets = {
     "/crypto_keyfile.bin" = null;
+  };
+
+  #RAM Usage creates swapspace
+  zramSwap = {
+    enable = true;
+    memoryPercent = 100;
   };
 
   networking.hostName = "nixos"; # Define your hostname.
@@ -86,6 +94,9 @@
     ];
   };
 
+    hardware.bluetooth.enable = true;
+    services.blueman.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -105,6 +116,8 @@
     awscli2
     dbeaver
     teams
+    vial
+    nodejs
   ];
 
   virtualisation.docker.enable = true;
