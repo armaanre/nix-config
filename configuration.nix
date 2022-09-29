@@ -19,6 +19,13 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
+
+  #trackapad
+  services.xserver.libinput.touchpad.naturalScrolling = false; 
+  services.xserver.libinput.enable = true; 
+  services.xserver.libinput.touchpad.middleEmulation = true; 
+  services.xserver.libinput.touchpad.tapping = true;
+
   # Setup keyfile
   boot.initrd.secrets = {
     "/crypto_keyfile.bin" = null;
@@ -92,6 +99,9 @@
       kate
     #  thunderbird
     ];
+
+    shell = "/etc/profiles/per-user/armaan/bin/zsh";
+
   };
 
     hardware.bluetooth.enable = true;
@@ -107,17 +117,16 @@
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    google-chrome
-    vscode-fhs
-    slack
     git
-    direnv
-    docker-compose
-    awscli2
-    dbeaver
-    teams
-    vial
-    nodejs
+    vscode
+    (vscode-with-extensions.override {
+      vscodeExtensions = with vscode-extensions; [
+        bbenoist.nix
+        ms-python.python
+        ms-azuretools.vscode-docker
+        ms-vscode-remote.remote-ssh
+      ]; 
+    })
   ];
 
   virtualisation.docker.enable = true;
