@@ -11,6 +11,7 @@
     nodejs
     chromedriver
     nixpkgs-fmt
+    neovim
 ];
 
 
