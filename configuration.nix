@@ -72,7 +72,6 @@
 
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -94,18 +93,12 @@
     isNormalUser = true;
     description = "Armaan";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [
-      firefox
-      kate
-    #  thunderbird
-    ];
-
     shell = "/etc/profiles/per-user/armaan/bin/zsh";
-
   };
 
     hardware.bluetooth.enable = true;
     services.blueman.enable = true;
+   # hardware.pulseaudio.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -119,6 +112,8 @@
     wget
     git
     vscode
+    wayland
+    firefox
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         bbenoist.nix
@@ -128,7 +123,7 @@
       ]; 
     })
   ];
-
+  services.xserver.videoDrivers = [ "displaylink" "modesetting" ];
   virtualisation.docker.enable = true;
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

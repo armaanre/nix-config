@@ -12,11 +12,17 @@
     chromedriver
     nixpkgs-fmt
     neovim
+    patchelf
+    google-chrome-dev
+    kate
+    lens
+    xorg.xrandr
+    libreoffice
 ];
 
 
 
-
+  home.stateVersion = "22.05";
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
