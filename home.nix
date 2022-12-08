@@ -17,7 +17,7 @@
     kate
     lens
     xorg.xrandr
-    libreoffice
+    #libreoffice
 ];
 
 
