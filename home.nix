@@ -19,6 +19,7 @@
     xorg.xrandr
     #libreoffice
     thunderbird
+    postman
 ];
 
 

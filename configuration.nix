@@ -9,39 +9,26 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
-  
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  services.udev.packages = with pkgs; [ vial ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
-
-  #trackapad
-  services.xserver.libinput.touchpad.naturalScrolling = false; 
-  services.xserver.libinput.enable = true; 
-  services.xserver.libinput.touchpad.middleEmulation = true; 
-  services.xserver.libinput.touchpad.tapping = true;
-
   # Setup keyfile
   boot.initrd.secrets = {
     "/crypto_keyfile.bin" = null;
   };
 
-  #RAM Usage creates swapspace
-  zramSwap = {
-    enable = true;
-    memoryPercent = 100;
-  };
+  # Enable swap on luks
+  boot.initrd.luks.devices."luks-5073f2e1-3192-4ef1-92cf-d9ea404b970f".device = "/dev/disk/by-uuid/5073f2e1-3192-4ef1-92cf-d9ea404b970f";
+  boot.initrd.luks.devices."luks-5073f2e1-3192-4ef1-92cf-d9ea404b970f".keyFile = "/crypto_keyfile.bin";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Configure network proxy             #export MONGOMS_SYSTEM_BINARY_VERSION_CHECK=false
-            #export MONGOMS_SYSTEM_BINARY=${pkgs-old.mongodb-5_0}/bin/mongodif necessary
+  # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
@@ -51,10 +38,20 @@
   # Set your time zone.
   time.timeZone = "Australia/Sydney";
 
-
-
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_AU.utf8";
+  i18n.defaultLocale = "en_AU.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_AU.UTF-8";
+    LC_IDENTIFICATION = "en_AU.UTF-8";
+    LC_MEASUREMENT = "en_AU.UTF-8";
+    LC_MONETARY = "en_AU.UTF-8";
+    LC_NAME = "en_AU.UTF-8";
+    LC_NUMERIC = "en_AU.UTF-8";
+    LC_PAPER = "en_AU.UTF-8";
+    LC_TELEPHONE = "en_AU.UTF-8";
+    LC_TIME = "en_AU.UTF-8";
+  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -74,6 +71,7 @@
 
   # Enable sound with pipewire.
   sound.enable = true;
+  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -90,22 +88,18 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.armaan = {
     isNormalUser = true;
     description = "Armaan";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = "/etc/profiles/per-user/armaan/bin/zsh";
+
   };
-
     hardware.bluetooth.enable = true;
-    services.blueman.enable = true;
-   # hardware.pulseaudio.enable = true;
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  services.gnome.gnome-keyring.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -114,19 +108,11 @@
     wget
     git
     vscode
-    wayland
-    firefox
-    (vscode-with-extensions.override {
-      vscodeExtensions = with vscode-extensions; [
-        bbenoist.nix
-        ms-python.python
-        ms-azuretools.vscode-docker
-        ms-vscode-remote.remote-ssh
-      ]; 
-    })
   ];
   services.xserver.videoDrivers = [ "displaylink" "modesetting" ];
   virtualisation.docker.enable = true;
+
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -152,6 +138,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.05"; # Did you read the comment?
+  system.stateVersion = "22.11"; # Did you read the comment?
 
 }
