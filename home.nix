@@ -18,6 +18,7 @@
     lens
     xorg.xrandr
     #libreoffice
+    thunderbird
 ];
 
 
